@@ -1,0 +1,547 @@
+How to convert a single instance database to RAC instance ?
+What's the role of access gate?
+What is image copy in RMAN ? --> It's exact copy of the data files bytes by bytes
+stripping and mirroring in ASM
+TLS and SSL
+
+SCAN conecpts:
+
+https://rajat1205sharma.wordpress.com/2015/02/16/you-dont-have-to-be-a-geek-to-know-scan-name-scan-vip-scan-listener-node-vip-local_listener-and-remote_listener/
+
+
+
+1) How to reset weblogic password
+
+https://oracle-base.com/articles/11g/reset-the-adminserver-password-in-weblogic-11g-and-12c
+$ cd $DOMAIN_HOME/security
+$ java weblogic.security.utils.AdminAccount <username> <password> .
+
+2) How to create a domain in weblogic if it's corrupted
+3) Performance tuning task
+4) cloning process
+5) How to reset apps password
+6) when do we run fs_clone
+
+Ans:  
+1) After aborting an online patching cycle.
+2) After manually changing the run edition file system.
+3) After patching middle-tier technology components.
+4) After applying an EBS RUP.
+
+7) why do we run actualize all 
+
+Ans: actualize_all – Create new copies of all code objects in the patch
+edition.
+
+As each online patching cycle is completed, the database starts accumulating additional old database editions. As the number goes up, the system performance gets affected. As soon as the number of old database editions reaches 25 or more, you should consider dropping all old database editions by running the adop actualize_all phase and then perform a full cleanup.
+
+Tip:  This procedure will take a large amount of time (significantly longer than a normal patching cycle), and should only be performed when there is no immediate need to start a new patching cycle.
+
+Before starting, you should ensure that the system has the recommended database patches and the latest AD-TXK code level installed.
+
+To proceed, run the following commands in the order shown:
+
+$ adop phase=prepare
+
+$ adop phase=actualize_all
+
+$ adop phase=finalize finalize_mode=full
+
+$ adop phase=cutover
+
+$ adop phase=cleanup cleanup_mode=full
+
+You have now completed removal of the old database editions.
+
+8) some times cleanup phase runs for long time, why ?
+
+Ans: Cause of the running concurrent programs, it waits for the programs to complete. In case we use CM_WAIT option and 
+Give a particular time, it will wait for the programs to complete till the time mentioned against the parameter cm_wait and then will kill the program.
+
+9) How to restrict a user in weblogic
+
+And : By putting the user in particular group. Going to security realms, user and groups we can modify it.
+
+
+
+10) How to create an event in oem
+
+11) when to run actualize_all 
+
+when we need to clear the editions
+
+12) Read on weblogic more
+
+13) How does PCP works
+14) ASM rebalancing what does it mean
+
+https://oracleracdba1.wordpress.com/2012/10/12/how-to-add-disk-to-asm/
+https://www.thegeekdiary.com/how-to-add-new-disk-to-an-existing-diskgroup-on-rac-cluster-or-standalone-asm-configuration/
+
+15) How to configure custom top
+
+16) In case a datafile is corrupt, how to recover it 
+
+17) User dropped a table, how to get the table
+
+flashback table testing to before drop;
+
+alter index "BIN$HGnc55/BrRPgQPeM/qQoRw==$0" rename to TESTING_JOB_IX;
+  alter index "BIN$HGnc55/CrRPgQPeM/qQoRw==$0" rename to TESTING_EMPLOYEE_IX;
+  alter index "BIN$HGnc55/DrRPgQPeM/qQoRw==$0" rename to TESTING_DEPARTMENT_IX;
+  alter index "BIN$HGnc55/ErRPgQPeM/qQoRw==$0" rename to TESTING_EMP_ID_ST_DATE_PK;
+
+18) If a concurrent request was running from primary node and it goes down in PCP environment, and the request goes to second node and again the primary node comesup
+	what happens to request
+19) How does business user logsin in application? dbc , appspub guest used
+20) In case of pre-req patch required what are the steps?
+
+
+
+patching in R12.2 http://h2hdba.blogspot.in/p/r122-quick-notes-and-commands.html
+https://abhinavkotnala.wordpress.com/2015/09/04/adop-application-dba-online-patching-tool-2/
+
+
+___________________________________________________________________________________________________________________
+
+
+what if one of the node is in abandoned status while applying patch in R12.2 ?
+
+What is Scan listener?
+
+Ans : 
+
+what is voting disk ? 
+What is cache fusion in RAC ?
+what is difference between prepare and fs_clone phase ?
+what is sso, how to integrate it with R12 ?
+what is OID, how to integrate with R12 ?
+what is DMZ, how to configure DMZ?
+What is PCP, how to configure it ?
+What is JVM, how to tackel memory error for weblogic managed servers?
+what's the role of Nodemanager in weblogic ?
+what are the tools for soa deployments?
+How to add second node in R12.2?
+How to convert from http to https?
+what if one of the RAC node has less RAM and resources, would the performance affected?
+
+
+
+
+What if user complains of front-end not opening, javalang error, diagonising steps involved? -- might be datasource issue
+What if catalog database is not there, how to restore?
+Latest JDK version ceertified with forms ? JRE 1.8
+What steps to be taken if forms are not opening and asking for latest java version, instaed of updating on client's system, how to tackle it in one go ?
+What is difference between crosscheck all and validate?
+
+Ans: Crosscheck checks all the files stored on disk and if any corresponding file is not physically present on the disk, It will mark it as expired.
+Validate: By default the command only checks for physical corruption. Add the CHECK LOGICAL clause to include checks for logical corruption.
+RMAN> BACKUP VALIDATE CHECK LOGICAL DATABASE ARCHIVELOG ALL;
+
+Diference backup strategies?
+DMZ, extrnal node configuration?
+PCP configuration?
+
+
+RMAN
+
+How to recover in case a particular archive is missing ?
+
+Ans: It can be recovered before that archive, get log sequence # and try to recove until that sequennce number.
+
+
+show all parameter which parameter to check for retention policy ?
+
+Ans: CONFIGURE RETENTION POLICY TO REDUNDANCY 1; # default
+
+How to restore without catalog database?
+
+How to  apply that missing archive to recover ?
+
+
+RAC
+
+what if one of the RAC node has less RAM and resources, would the performance affected?
+What is Scan listener?
+
+How many nodes can we have in a RAC ?
+How many voting disks can we have ? 2n-1 odd numbers 
+what is OCR ? 
+Is it possible to have a single node cluster ? Yes 
+Which prcess regulates the voting disk task? CSSD
+
+what is cache fusion?
+
+In RAC databases the instances have their own sga and background process, 
+at database level the buffer cache of RAC instance fuse together to form a global cache for the database to maintain the data intergrity. 
+This is called as Cache fusion.The Global Cache Service is implemented by various background processes, such as
+
+Global Cache Service Processes (LMSn)
+Global Enqueue Service Daemon (LMD)
+
+Can we add a node to RAC ? Yes 
+What is GRD ? Global resounce directory, it has information of the database blocks 
+Which process is responsible for cache fusion- > LMS ?
+What is split brain syndrome ?
+
+
+In a cluster, a private interconnect is used by cluster nodes to monitor each node’s status and communicate with each other. When two or more nodes fail to ping or connect to each other 
+via this private interconnect, the cluster gets partitioned into two or more smaller sub-clusters each of which cannot talk to others over the interconnect. 
+Oblivious of the existence of other cluster fragments, each sub-cluster continues to operate independently of the others. This is called “Split Brain”.
+ In such a scenario, integrity of the cluster and its data might be compromised due to uncoordinated writes to shared data by independently operating nodes. 
+Hence, to protect the integrity of the cluster and its data, the split-brain must be resolved.
+
+Features of 12c grid ?
+
+split brain handeling algorithm has changed.
+
+Starting from 12.1.0.2, during split brain resolution, the new algorithm followed to decide the nodes to be evicted/retained is as follows:
+
+If the sub-clusters are of the different sizes, the functionality is same as earlier, i.e. the clusterware identifies the largest sub-cluster, and aborts all the nodes which do
+not belong to that sub-cluster
+If all the sub-clusters are of the same size, the functionality has been modified as:
+If the sub-clusters have equal node weights, the sub-cluster with the lowest numbered node in it survives so that, in a 2-node cluster, the node with the lowest node number will survive.
+If the sub-clusters have unequal node weights, the sub-cluster having the higher weight survives so that, in a 2-node cluster, the node with the lowest node number might be evicted 
+if it has a lower weight.
+
+Performance Tuning 
+
+Command to check the locks in database, single line command, how to get the blocking sid and blocker sid ?
+Performance tuning--> hash_plan, execution plan, sql profile, oradebug trace generation, etc 
+ORADEBUG
+AWR report
+
+what is lock and latch ?
+
+dbms_sql_tune, 
+
+Table reorganization, how to decide possible candidate for table reorganization ?
+
+--> https://archive.sap.com/discussions/thread/3525792
+
+
+
+Applications
+
+What is use of DBC file ?
+
+The .dbc file is mostly used to define database parameters, stands for database connect descriptor file, used to connectto database, 
+it authenticate users against database in FND_USER table.
+
+If forms are not opening what is the possible diagnosing steps ? - http://tk-appsdba.blogspot.in/2011/02/oracle-apps-r12-forms-not-opening.html
+
+Front end is not opening, what's possible steps to diagnose this issue ?
+
+Is it manadatory to run adpreclone ? No not necessary only if major changes happened to prod.
+
+Patch failed with pre-req  patch requirement, what steps to take , what if it was maintenance patch?
+
+what is fnd_installed_process and ad_deffered_jobs ?
+
+FND_INSTALLED has workers information
+AD_DEFFERED_JOBS has the deffered jobs info in case of worker failure
+
+ICM goes down, would requests keep processing ?
+
+Yes 
+What will happen to new requests if ICM is down ?
+
+Wont pass I guess
+
+How to make a request to run through manager other than from Standard manager ? Exclude from Standard Manager and Include to the other Manager
+
+Ans : Change the difinition of program to run from the chosen manager and exclude it from standard manager.
+
+What if workflow agent listener is down, how to diagnose it?
+
+
+what's your approach to resolve the agent listener issue ?
+
+Application insatallation steps , what is vanila setup- read about it ?
+
+Cloning steps in detail ---answer it with patience
+ 
+Read on the steps involved in processing a concurrent request?
+
+what is function of ICM, CRM and standard manager ?
+
+How to tune a concurrent manager?
+what is guest user in dbc file what is it's purpose ?
+
+The .dbc file is actually the database connector descriptor file used to connect to database and this file is by-default located in $FND_TOP/secure directory, 
+this file is quite important as whenever any program likes to connect to database like forms it uses dbc file where there you find the Guest_user_pwd ,
+when the guest user connect it does not allow it to directly connect to the database but it first connect goes via this file and cross verify the password of the guest which is kept in this file.
+
+How to setup printer ?
+How to install oracle apps ?
+
+
+
+
+
+
+
+what's the purpose of FNDLOAD ?
+
+FNDLOAD is a concurrent program that allows the moving of metadata between Oracle Applications between database and text file. 
+It allows downloading of meta data directly via a UNIX command and then can be moved and uploaded to another instance. 
+The FNDLOAD conversion of meta data into Oracle is specified by a configuration file in the .LCT (Loader configuration file). 
+The actual metadata file that FNDLOAD provides is in .LDT (Loader data file) format. Oracle provides .lct files for the following and are located in this directory:
+
+1
+$FND_TOP/patch/115/import
+
+FNDLOAD apps/D_gd3682 0 Y UPLOAD $FND_TOP/patch/115/import/afcpprog.lct XX_NOTES_DATA_FIX_CP.ldt - WARNING=YES UPLOAD_MODE=REPLACE CUSTOM_MODE=FORCE
+
+What's the difference between FNDLOADER and SQLLOADER ?
+
+SQL Loader is a tool in Oracle to load data from flat file into tables.  Data objects 
+Its very useful when you are trying to load data into oracle from a non-oracle system. Code onjects
+
+
+ITC
+
+Q. How To Recover Standby Database When Archive Logs Are Missing In Primary
+
+http://dbaclass.com/article/how-to-recover-standby-database-when-archive-logs-are-missing-in-primary/
+
+Q setting up Data guard --> different parameters (fal_server, fal_client, dsb_unique_id, archive_log_dest2
+
+Q Concurrent request not coming up post clone
+
+till we could have run cmclean.sql but from r12.2 we need to check the concurrent manager wizard to resolve such issues.
+
+****L & T****
+
+1) Advantage of using ASM
+2) How to mount a disk in ASM
+3) In case of R12.2 patch application, if patch fails with prereq patch requirement what to do ?
+4) rsestart and abandon parameters
+5) RAC processes
+6) How to apply a PSU in RAC environment
+7) Node manager in weblogic, tuning of managers JVM, 
+8) Concyrrent manager tuning, workshift, sleep cycle, PMON
+9) DR is R12.1
+10) R12.2 clone steps
+11) scripting
+12) software interconnects and hardware interconnects
+13) ssh , how it works
+14) db_id of target when it's changed while restoring using RMAN
+15) which table to update for updating concurrent manager node 
+16) Is it possible to clone without using autoconfig\
+17) Application deployments of file (changes in file system, tums etc)
+18) 
+
+
+*******************************************************************************************
+
+1) While patching if environment file of patch file system is corrupted, what to do ?
+
+autoconfig will regnearate it 
+
+2) How to generate a context file if corrupted in R12.2 ?
+
+Execute the following command on the applications tier.
+perl /clone/bin/adclonectx.pl retrieve
+
+3) adcgclone.pl dbtechstack ?
+
+4) A table is dropped in prod, how to retrieve it using rMAN ?
+https://shivanandarao-oracle.com/2014/04/08/recovering-a-dropped-table-using-rman-and-datapump-options/
+
+5) If there is an archival gap, how to tackel it?
+
+https://www.linkedin.com/pulse/how-recover-archive-gaps-standby-database-using-2-methods-kumar/
+
+6) How apps schema would be able to select from a table created under AP ? Apps has access to the synoynm of the objects under app_top schema objects 
+
+7) If a concurrent request is running and causing the other requests to be in pending state what would be the steps taken to resolve ?
+
+8) What the process mrp?
+
+9) Different views to check the archives in dataguard?
+
+v$archived_log; v$managed_standby, v$archive_gap, 
+
+SELECT MAX(SEQUENCE#) FROM V$ARCHIVED_LOG WHERE APPLIED='YES';
+
+
+
+10_
+
+
+*************************************************************************************
+
+
+db upgrade
+how to delete archive from rman
+rac
+
+what issue u faced during upgrade or after upgrade
+db perfrormance what u ll check
+long running request
+
+in emergency situation u directly apply the patch ?in PROD 
+?
+cloning steps
+
+RMAN restore methods
+
+Oracles Doc ID 376700.1 - Enabling TLS in Oracle E-Business Suite Release 12.1 to resolve. 
+
+
+***************************************************************************************
+
+
+What are war and ear files ?
+
+web application archives file and Enterprise application archives
+
+DMZ setup 
+How would you find the PCP nodes?
+PCP setup 
+AD/TXK upgrade steps ?
+How many times do we need to run adcfgclone in RAC environment ?
+How to apply PSU patches in RAC node ?
+Diffrence between opatchauto and opatch ?
+How to check prereq patch for PSU ?
+What is the latest PSU to be applied if you want to apply JAN PSU 18 ?
+What does adgrants do ?
+opatch options ? opatch rollback, lsinventory, apply -local, napply
+PCP set up explain?
+Datagurad 
+inventory file inside a opatch ?
+How to add a managed server in R12.2?
+What happens in prepare phase ?
+what does adgrants do ?
+How etcc code checker will know which patch would be needed for your environment?
+
+
+*******************************************************************************************
+
+Few users are complaining of front-end not opening? oacore issue , check oacore logs, check apache, check db file system space, check tablespaces
+OPP issue in log, how to handle it ?
+PCP configuration, how the mangers will fall back, which profile option makes it do? CONCURRENT 
+Workflow mailer logs are not being purged, how to do it?
+DR set up for r12.2 ?
+Output Post Processor (OPP) Log Contains Error "java.lang.OutOfMemoryError: Java heap space?
+soa integration, how does it work with Ebiz ?
+How to set a limit on max user for a oacore server?
+
+
+**********************************************************
+
+Read about tkprof file staructure
+Load balancer parameter in xml file 
+clustering in weblogic
+what if admin goes down on primary node, how will you configure it on second node ?
+what role does bind variables play while scanning a tkprof file
+Dataguard manual setup 
+what does catalog start with do 
+how to match the file configuration of db node with the standby database node ? what are the steps for it ?
+
+
+
+*******************************************
+
+How to check workflow issue, which log file to ccheck?
+cd $APPLCSF/%APPLLOG
+How to re-build a workflow queue?
+1. Stop Workflow Agent Listeners and Mailers.
+
+2. Find the tablespace where indexes on corrid for queue tables are created:
+
+sqlplus apps/<apps_pwd>
+
+select distinct tablespace_name
+from dba_indexes,dba_queues
+where index_name='WF_NOTIFICATION_OUT_N1'
+and table_name=queue_table
+and name like 'WF%';
+
+3. Rebuild mailer's queue:
+
+
+sqlplus apps/<apps_pwd> @$FND_TOP/patch/115/sql/wfntfqup APPS <apps_pwd> APPLSYS
+
+What is difference between sys and system user ?
+
+sys user contains all the base tables and view  related to the database dictionary and stored in the sys schema.
+System schema is mainly used for administrative purpose 
+sysdba is system privilege wwhich allows acccess to instance even if instance is down.
+
+
+what is job_queue_process parameter?
+what is admin and managed server in weblogic?
+How to define a data source?
+what is use of boot.properties?
+what if concurrent manager is not coming up post cloning ?
+How to define an incident in OEM?
+How to deploy an OEM agent ?
+How to define an alert in oem?
+
+What if catalog db goes down, then how to proceed to clone a db ?
+what information does catalog db stores?
+How to know the default RMAN setting for a db?
+How to run gather stats on a table and schema, significance of the percentage parameter in gather stats, what it does?
+What if a job is scheduled from OEM and OEM fails, would job keep running, what will happen to job once the OEM comes up?
+
+while installing weblogic when it asks for db details ? while creating rcu shemas
+
+what does fnd_conc_clone.setup_clean do ?
+
+It deletes the information from fnd_concurrent_queue_size, fnd_concurrent_queues_tl and
+It deletes the information from fnd_concurrent_queues,
+Delete from fnd_nodes;
+
+******************************************************************
+
+
+1) In adop cycle US patch was applied but NLS was missed. How to rectify the error which comes out at the time of patching the NLS patch.
+
+Basically, you should apply NLS patch in the same ADOP cycle as BASE patch. But, you can use the next workaround.
+
+
+1. Execute "Maintain snapshot information".
+
+$ adadmin
+  2. Maintain Applications Files menu
+    4. Maintain snapshot information
+       2. Update current view snapshot
+          1. Update Complete APPL_TOP
+
+2. Apply the JA patch again.
+
+2) How to increase the speed of bsu patching 
+
+By editting the memory heap size xms xmx parameters
+
+3) How to troubleshoot incase of node eviction of a RAC env
+
+4) what if forms are not opening 
+
+5) How to add an application node 
+
+6) R12.1 to R12.2 upgrade 
+
+7) 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
